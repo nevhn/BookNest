@@ -1,73 +1,116 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-// import InputGroup from "react-bootstrap/InputGroup";
 import Container from "react-bootstrap/Container";
 import ReactStars from "react-rating-stars-component";
+import axios from "axios";
 
-export const AddBook = () => {
-  const [validated, setValidated] = useState(false);
+export const AddBook = ({ user }) => {
+  const [title, setTitle] = useState();
+  const [author, setAuthor] = useState();
+  const [genre, setGenre] = useState();
+  const [status, setStatus] = useState();
+  const [rating, setRating] = useState(0);
+
+  const uploadBook = async () => {
+    let body = {
+      title,
+      author,
+      genre,
+      rating: status == "Not Started" ? 0 : rating,
+      reader: user ? user.username : "anonymous",
+      status,
+    };
+    console.log(body);
+    try {
+      const response = await axios.post("http://localhost:8080/books", body);
+      console.log(response.data);
+      alert("Book added successfully");
+    } catch (err) {
+      console.error(err);
+      alert("Error:", err);
+    }
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    uploadBook();
+  };
 
   const ratingChanged = (newRating) => {
     console.log(newRating);
-  };
-
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
+    setRating(newRating);
   };
   return (
-    <Container>
-      <Form className="mt-5" validated={validated} onSubmit={handleSubmit}>
-        <Form.Group as={Row} className="mb-3" controlId="validationCustom01">
+    <Container className="mt-5">
+      <h1>
+        You can add a book anonymously or login to save to your collection
+      </h1>
+      <Form className="mt-5" onSubmit={handleSubmit}>
+        <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={1}>
             Book title
           </Form.Label>
           <Col sm={10}>
-            <Form.Control required type="text" placeholder="The Great Gatsby" />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              type="text"
+              placeholder="The Great Gatsby"
+            />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="validationCustom02">
+        <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={1}>
             Author
           </Form.Label>
           <Col sm={10}>
-            <Form.Control required type="text" placeholder="Last name" />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control
+              onChange={(e) => setAuthor(e.target.value)}
+              required
+              type="text"
+              placeholder="F. Scott Fitzgerald"
+            />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="validationCustom02">
+        <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={1}>
             Genre
           </Form.Label>
           <Col sm={10}>
-            <Form.Control required type="text" placeholder="Last name" />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control
+              onChange={(e) => setGenre(e.target.value)}
+              required
+              type="text"
+              placeholder="Tragedy"
+            />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="validationCustom02">
+        <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={1}>
             Status
           </Form.Label>
           <Col sm={10}>
-            <Form.Control required type="text" placeholder="Last name" />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Select
+              onChange={(e) => setStatus(e.target.value)}
+              required
+              aria-label=""
+            >
+              <option value="" disabled selected>
+                Select status
+              </option>
+              <option value="Finished">Finished</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Not Started">Not Started</option>
+            </Form.Select>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="validationCustom02">
+        <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={1}>
             Rating
           </Form.Label>
           <Col sm={10}>
-            {/* <Form.Control required type="text" placeholder="Last name" /> */}
             <ReactStars
               count={5}
               onChange={ratingChanged}
@@ -78,7 +121,6 @@ export const AddBook = () => {
               fullIcon={<i className="fa fa-star"></i>}
               activeColor="#ffd700"
             />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Col>
         </Form.Group>
         <Form.Group as={Row} className="mb-3">

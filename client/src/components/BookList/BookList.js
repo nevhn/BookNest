@@ -1,34 +1,61 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
-export const BookList = () => {
+import ReactStars from "react-rating-stars-component";
+export const BookList = ({ user }) => {
+  const [books, setBooks] = useState([]);
+  const fetchBooks = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/books/${user.username}`
+      );
+      console.log(response.data);
+      setBooks(response.data);
+    } catch (error) {
+      console.error("err", error);
+    }
+  };
+  useEffect(() => {
+    fetchBooks();
+  }, [user]);
   return (
     <Table className="mt-5" striped bordered hover size="sm">
       <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
+          <th>#ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Status</th>
+          <th>Rating</th>
+          <th>Reader</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td colSpan={2}>Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {books.map((book) => (
+          <tr>
+            <td>{book.book_id}</td>
+            <td>{book.title}</td>
+            <td>{book.author}</td>
+            <td>{book.genre}</td>
+            <td>{book.book_read}</td>
+            <td>
+              <ReactStars
+                count={5}
+                value={book.rating}
+                // onChange={ratingChanged}
+                edit={false}
+                size={24}
+                isHalf={true}
+                emptyIcon={<i className="far fa-star"></i>}
+                halfIcon={<i className="fa fa-star-half-alt"></i>}
+                fullIcon={<i className="fa fa-star"></i>}
+                activeColor="#ffd700"
+              />
+            </td>
+            <td>{book.reader}</td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   );

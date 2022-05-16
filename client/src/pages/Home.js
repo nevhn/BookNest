@@ -1,8 +1,23 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 export const Home = () => {
+  const [books, setBooks] = useState([]);
+  const fetchBooks = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/books");
+      console.log(response.data);
+      setBooks(response.data);
+    } catch (error) {
+      console.error("err", error);
+    }
+  };
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
   const ratingChanged = (newRating) => {
     console.log(newRating);
   };
@@ -14,38 +29,42 @@ export const Home = () => {
         <thead>
           <tr>
             <th>#ID</th>
-            {Array.from({ length: 7 }).map((_, index) => (
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Status</th>
+            <th>Rating</th>
+            <th>Reader</th>
+            {/* {Array.from({ length: 7 }).map((_, index) => (
               <th key={index}>Title</th>
-            ))}
+            ))} */}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            {Array.from({ length: 7 }).map((_, index) => (
-              <td key={index}>Table cell {index}</td>
-            ))}
-          </tr>
-          <tr>
-            <td>2</td>
-            {Array.from({ length: 7 }).map((_, index) => (
-              <td key={index}>Table cell {index}</td>
-            ))}
-          </tr>
-          <tr>
-            <td>3</td>
-            {Array.from({ length: 7 }).map((_, index) => (
-              <td key={index}>
-                Table cell {index}
+          {books.map((book) => (
+            <tr>
+              <td>{book.book_id}</td>
+              <td>{book.title}</td>
+              <td>{book.author}</td>
+              <td>{book.genre}</td>
+              <td>{book.book_read}</td>
+              <td>
                 <ReactStars
                   count={5}
-                  onChange={ratingChanged}
+                  value={book.rating}
+                  // onChange={ratingChanged}
+                  edit={false}
                   size={24}
+                  isHalf={true}
+                  emptyIcon={<i className="far fa-star"></i>}
+                  halfIcon={<i className="fa fa-star-half-alt"></i>}
+                  fullIcon={<i className="fa fa-star"></i>}
                   activeColor="#ffd700"
                 />
               </td>
-            ))}
-          </tr>
+              <td>{book.reader}</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </Container>
