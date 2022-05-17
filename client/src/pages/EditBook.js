@@ -23,13 +23,21 @@ export const EditBook = ({ user }) => {
   const updateBook = async () => {
     let body = {
       book_id: id,
+      title,
       author,
       genre,
-      rating: status == "Not Started" ? 0 : rating,
+      rating: status === "Not Started" ? 0 : rating,
       reader: user.username,
       status,
     };
-    const response = await axios.put("http://localhost:8080/books");
+    try {
+      const response = await axios.put("http://localhost:8080/books", body);
+      console.log(response);
+      alert(`ID:${id} was updated successfully`);
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -37,9 +45,10 @@ export const EditBook = ({ user }) => {
     updateBook();
   };
   return (
+    // TODO: autofill when id is selected
     <Container>
       <BookList user={user} />
-      <Form className="mt-5" onSubmit={handleSubmit}>
+      <Form className="mt-5" onSubmit={(e) => handleSubmit(e)}>
         <Form.Group as={Row} className="mb-3" controlId="validationCustom01">
           <Form.Label column sm={1}>
             Book ID

@@ -6,7 +6,9 @@ import { DeleteBook } from "./pages/DeleteBook";
 import { EditBook } from "./pages/EditBook";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
+import { MyCollection } from "./pages/MyCollection";
 import { Register } from "./pages/Register";
+import Container from "react-bootstrap/Container";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,7 +30,11 @@ function App() {
           path="/edit-book"
           element={
             !user ? (
-              <h1 className="mt-5">You need to be logged in to edit books</h1>
+              <Container>
+                <h1 className="mt-5 m-auto">
+                  You need to be logged in to edit books
+                </h1>
+              </Container>
             ) : (
               <EditBook user={user} />
             )
@@ -38,7 +44,11 @@ function App() {
           path="/delete-book"
           element={
             !user ? (
-              <h1 className="mt-5">You need to be login to delete books </h1>
+              <Container>
+                <h1 className="mt-5 m-auto">
+                  You need to be logged in to delete books
+                </h1>
+              </Container>
             ) : (
               <DeleteBook user={user} />
             )
@@ -46,6 +56,10 @@ function App() {
         />
         <Route path="/login" element={user ? <Home /> : <Login />} />
         <Route path="/register" element={user ? <Home /> : <Register />} />
+        <Route
+          path="/collection"
+          element={user ? <MyCollection user={user} /> : <Home />}
+        />
       </Routes>
     </BrowserRouter>
   );

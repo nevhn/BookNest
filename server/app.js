@@ -9,43 +9,11 @@ const JWT_SECRET = "b00ksR0ck!";
 app.use(cors());
 app.use(express.json());
 
-// routes
-
-// create a todo
-// app.post("/todos", async (req, res) => {
-//   try {
-//     const { description } = req.body;
-//     const newTodo = await pool.query(
-//       "INSERT INTO todo (description) VALUES ($1) RETURNING *",
-//       [description]
-//     );
-
-//     res.json(newTodo.rows[0]);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
-// // get a todo
-// app.get("/todos/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [
-//       id,
-//     ]);
-
-//     res.json(todo.rows[0]);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
-// get all todos
-
-// fetch all books
+/*routes*/
 app.get("/books", async (req, res) => {
+  /**fetch all books */
   try {
-    const booksQuery = await pool.query("SELECT * FROM books");
+    const booksQuery = await pool.query("SELECT * FROM books ORDER BY book_id");
     res.json(booksQuery.rows);
   } catch (err) {
     console.error(err);
@@ -53,11 +21,12 @@ app.get("/books", async (req, res) => {
 });
 
 app.get("/books/:reader", async (req, res) => {
+  /**get books under reader */
   try {
     const { reader } = req.params;
     console.log(reader);
     const booksQuery = await pool.query(
-      "SELECT * FROM books WHERE reader = $1",
+      "SELECT * FROM books WHERE reader = $1 ORDER BY book_id",
       [reader]
     );
     res.json(booksQuery.rows);
@@ -65,7 +34,9 @@ app.get("/books/:reader", async (req, res) => {
     console.error(err);
   }
 });
+
 app.post("/books", async (req, res) => {
+  /**add a new book */
   try {
     const { title, author, genre, rating, reader, status } = req.body;
     const insertQuery = await pool.query(
@@ -79,6 +50,7 @@ app.post("/books", async (req, res) => {
 });
 
 app.delete("/books/:reader/:id", async (req, res) => {
+  /**delete book by id*/
   try {
     const { reader, id } = req.params;
     console.log(id);
@@ -96,17 +68,20 @@ app.delete("/books/:reader/:id", async (req, res) => {
 });
 
 app.put("/books", async (req, res) => {
+  /**update book by id */
   try {
-    const { book_id, author, genre, rating, reader, status } = req.body;
+    const { title, book_id, author, genre, rating, reader, status } = req.body;
     const updateQuery = await pool.query(
-      "UPDATE items SET author = $2, genre = $3, rating = $4, reader = $5, status = $6 WHERE id = $1 RETURNING *",
-      [book_id, author, genre, rating, reader, status]
+      "UPDATE books SET title = $1, author = $2, genre = $3, rating = $4, reader = $5, book_read = $6 WHERE book_id = $7 RETURNING *",
+      [title, author, genre, rating, reader, status, book_id]
     );
+    return res.json(updateQuery.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
 });
 app.post("/login", async (req, res) => {
+  /**auth */
   const { username, password } = req.body;
   try {
     const userSelectQuery = await pool.query(
@@ -138,6 +113,7 @@ app.post("/login", async (req, res) => {
   }
 });
 app.post("/register", async (req, res) => {
+  /**create a new account */
   const { username, password } = req.body;
   try {
     const insertNewUserQuery = await pool.query(
@@ -150,37 +126,6 @@ app.post("/register", async (req, res) => {
     return res.status(500).send({ status: "fail" });
   }
 });
-
-// update a todo
-// app.put("/todos/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { description } = req.body;
-//     const updateTodo = await pool.query(
-//       "UPDATE todo SET description = $1 WHERE todo_id = $2 RETURNING *",
-//       [description, id]
-//     );
-
-//     res.json(updateTodo.rows[0]);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
-// // delete a todo
-// app.delete("/todos/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const deleteTodo = await pool.query(
-//       "DELETE FROM todo WHERE todo_id = $1 RETURNING *",
-//       [id]
-//     );
-
-//     res.json(`Todo[${id}] was deleted.`);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
