@@ -14,7 +14,7 @@ export const Register = () => {
       password,
     };
     try {
-      const response = await axios.post("http://localhost:8080/register", body);
+      const response = await axios.post("/register", body);
       console.log(response);
       console.log(response.status);
       alert("Account created successfully");

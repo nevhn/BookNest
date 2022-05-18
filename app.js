@@ -2,12 +2,19 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 const pool = require("./db");
+const path = require("path");
 const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = "b00ksR0ck!";
+const PORT = process.env.PORT || 8080;
+
 // middleware
 app.use(cors());
 app.use(express.json());
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "client/build")));
+}
 
 /*routes*/
 app.get("/books", async (req, res) => {
@@ -127,7 +134,10 @@ app.post("/register", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 8080;
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build/index.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`Server has started on port ${PORT}`);
 });

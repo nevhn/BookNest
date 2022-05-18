@@ -14,9 +14,7 @@ export const DeleteBook = ({ user }) => {
 
   const deleteBook = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8080/books/${user.username}/${id}`
-      );
+      const response = await axios.delete(`/books/${user.username}/${id}`);
       console.log(response);
       alert("book deleted successfully");
       window.location.reload();

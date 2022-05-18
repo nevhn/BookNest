@@ -13,7 +13,7 @@ export const Login = () => {
       password,
     };
     try {
-      const response = await axios.post("http://localhost:8080/login", body);
+      const response = await axios.post("/login", body);
       console.log(response);
       console.log(response.status);
 

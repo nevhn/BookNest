@@ -25,7 +25,7 @@ export const AddBook = ({ user }) => {
     };
     console.log(body);
     try {
-      const response = await axios.post("http://localhost:8080/books", body);
+      const response = await axios.post("/books", body);
       console.log(response.data);
       alert("Book added successfully");
     } catch (err) {

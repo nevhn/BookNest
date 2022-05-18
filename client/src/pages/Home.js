@@ -7,7 +7,7 @@ export const Home = () => {
   const [books, setBooks] = useState([]);
   const fetchBooks = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/books");
+      const response = await axios.get("/books");
       console.log(response.data);
       setBooks(response.data);
     } catch (error) {

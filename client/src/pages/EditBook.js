@@ -31,7 +31,7 @@ export const EditBook = ({ user }) => {
       status,
     };
     try {
-      const response = await axios.put("http://localhost:8080/books", body);
+      const response = await axios.put("/books", body);
       console.log(response);
       alert(`ID:${id} was updated successfully`);
       window.location.reload();

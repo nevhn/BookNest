@@ -6,9 +6,7 @@ export const BookList = ({ user }) => {
   const [books, setBooks] = useState([]);
   const fetchBooks = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/books/${user.username}`
-      );
+      const response = await axios.get(`/books/${user.username}`);
       console.log(response.data);
       setBooks(response.data);
     } catch (error) {
