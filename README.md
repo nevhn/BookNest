@@ -3,7 +3,6 @@ A simple Book Inventory CRUD application built using the PERN stack and JSON Web
 
 ## Screenshots
 ![booknest-addbook](https://user-images.githubusercontent.com/51008990/218609991-49427de4-2513-4335-82f5-9da02ecf14e9.png)
-![booknest-addbook](https://user-images.githubusercontent.com/51008990/218610033-26e8c2a8-6849-45ba-9159-450a78692560.png)
 ![booknest-editbook](https://user-images.githubusercontent.com/51008990/218610038-d259a246-6e9c-448d-a4d0-e8ac1fef3897.png)
 ![booknest-delete](https://user-images.githubusercontent.com/51008990/218610042-912069f3-97cb-44b7-9c30-6f043d96270b.png)
 ![booknest-collection](https://user-images.githubusercontent.com/51008990/218616757-e091aa3c-9956-40cc-9f47-dbd778c0dadc.png)
